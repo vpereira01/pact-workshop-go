@@ -25,8 +25,8 @@ func TestMain(m *testing.M) {
 
 	// Setup Pact and related test stuff
 	pact = dsl.Pact{
-		Consumer: "consumer/client",
-		Provider: "provider/user_service",
+		Consumer: os.Getenv("CONSUMER_NAME"),
+		Provider: os.Getenv("PROVIDER_NAME"),
 		LogDir:   os.Getenv("LOG_DIR"),
 		PactDir:  os.Getenv("PACT_DIR"),
 		LogLevel: "INFO",

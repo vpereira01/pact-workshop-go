@@ -1,0 +1,68 @@
+{
+  "consumer": {
+    "name": "GoAdminService"
+  },
+  "provider": {
+    "name": "GoUserService"
+  },
+  "interactions": [
+    {
+      "description": "A request to get user with id 10",
+      "providerState": "User 10 exists",
+      "request": {
+        "method": "GET",
+        "path": "/users/10",
+        "matchingRules": {
+          "$.path": {
+            "match": "regex",
+            "regex": "\\/users\\/[0-9]+"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8",
+          "X-Api-Correlation-Id": "100"
+        },
+        "body": {
+          "firstName": "Sally",
+          "id": 10,
+          "lastName": "McSmiley Face😀😍",
+          "type": "admin",
+          "username": "sally"
+        },
+        "matchingRules": {
+          "$.headers.Content-Type": {
+            "match": "regex",
+            "regex": "application\\/json"
+          },
+          "$.headers.X-Api-Correlation-Id": {
+            "match": "type"
+          },
+          "$.body.firstName": {
+            "match": "type"
+          },
+          "$.body.id": {
+            "match": "type"
+          },
+          "$.body.lastName": {
+            "match": "type"
+          },
+          "$.body.type": {
+            "match": "regex",
+            "regex": "^(admin|user|guest)$"
+          },
+          "$.body.username": {
+            "match": "type"
+          }
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "2.0.0"
+    }
+  }
+}
