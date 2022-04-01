@@ -13,7 +13,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestClientUnit_GetUser(t *testing.T) {
+func TestClientUnit_GetUserExists(t *testing.T) {
 	userID := 10
 
 	// Setup mock server
@@ -40,4 +40,24 @@ func TestClientUnit_GetUser(t *testing.T) {
 
 	// Assert basic fact
 	assert.Equal(t, user.ID, userID)
+}
+
+func TestClientUnit_GetUserNotExists(t *testing.T) {
+	userID := 10
+
+	// Setup mock server
+	server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		assert.Equal(t, req.URL.String(), fmt.Sprintf("/user/%d", userID))
+		rw.WriteHeader(http.StatusNotFound)
+		rw.Write([]byte("{}"))
+	}))
+	defer server.Close()
+
+	// Setup client
+	u, _ := url.Parse(server.URL)
+	client := &Client{
+		BaseURL: u,
+	}
+	_, err := client.GetUser(userID)
+	assert.ErrorIs(t, err, ErrNotFound)
 }

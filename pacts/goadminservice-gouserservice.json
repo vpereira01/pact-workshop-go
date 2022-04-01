@@ -58,6 +58,36 @@
           }
         }
       }
+    },
+    {
+      "description": "A request to get user with id 10",
+      "providerState": "User 10 does not exist",
+      "request": {
+        "method": "GET",
+        "path": "/user/10",
+        "matchingRules": {
+          "$.path": {
+            "match": "regex",
+            "regex": "\\/user\\/[0-9]+"
+          }
+        }
+      },
+      "response": {
+        "status": 404,
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8",
+          "X-Api-Correlation-Id": "100"
+        },
+        "matchingRules": {
+          "$.headers.Content-Type": {
+            "match": "regex",
+            "regex": "application\\/json"
+          },
+          "$.headers.X-Api-Correlation-Id": {
+            "match": "type"
+          }
+        }
+      }
     }
   ],
   "metadata": {

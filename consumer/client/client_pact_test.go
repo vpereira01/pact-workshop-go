@@ -4,6 +4,7 @@
 package client_test
 
 import (
+	"errors"
 	"fmt"
 	"net/url"
 	"os"
@@ -58,7 +59,7 @@ func TestMain(m *testing.M) {
 	os.Exit(exitCode)
 }
 
-func TestClientPact_GetUser(t *testing.T) {
+func TestClientPact_GetUserExist(t *testing.T) {
 	// arrange
 	pact.
 		AddInteraction().
@@ -84,6 +85,38 @@ func TestClientPact_GetUser(t *testing.T) {
 		}
 
 		return err
+	})
+
+	if err != nil {
+		t.Fatalf("Error on Verify: %v", err)
+	}
+}
+
+func TestClientPact_GetUserNotExist(t *testing.T) {
+	// arrange
+	pact.
+		AddInteraction().
+		Given("User 10 does not exist").
+		UponReceiving("A request to get user with id 10").
+		WithRequest(dsl.Request{
+			Method: "GET",
+			Path:   dsl.Term("/user/10", "/user/[0-9]+"),
+		}).
+		WillRespondWith(dsl.Response{
+			Status:  404,
+			Headers: commonHeaders,
+		})
+
+	// act & assert
+	err := pact.Verify(func() error {
+		_, err := client.GetUser(10)
+
+		// Assert basic fact
+		if !errors.Is(err, target.ErrNotFound) {
+			return fmt.Errorf("expected error %s but got %s", target.ErrNotFound, err)
+		}
+
+		return nil
 	})
 
 	if err != nil {
