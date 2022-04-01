@@ -11,11 +11,11 @@
       "providerState": "User 10 exists",
       "request": {
         "method": "GET",
-        "path": "/users/10",
+        "path": "/user/10",
         "matchingRules": {
           "$.path": {
             "match": "regex",
-            "regex": "\\/users\\/[0-9]+"
+            "regex": "\\/user\\/[0-9]+"
           }
         }
       },

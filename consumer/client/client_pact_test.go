@@ -66,7 +66,7 @@ func TestClientPact_GetUser(t *testing.T) {
 		UponReceiving("A request to get user with id 10").
 		WithRequest(dsl.Request{
 			Method: "GET",
-			Path:   dsl.Term("/users/10", "/users/[0-9]+"),
+			Path:   dsl.Term("/user/10", "/user/[0-9]+"),
 		}).
 		WillRespondWith(dsl.Response{
 			Status:  200,
